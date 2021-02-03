@@ -1,0 +1,18 @@
+<h1>{{ question.question_text }}</h1>
+
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }} {% if choice.choice_text == request.session.user_choices|get_item:request.session.session_key|get_item:"questions_choices"|get_item:question.question_text %} <b>(your choice)</b> {% else %}{% endif %}</li>
+{% endfor %}
+</ul>
+
+<!-- {{ request.session.user_choices }}
+{{ request.session.user_choices|get_item:request.session.session_key|get_item:"questions_choices"|get_item:question.question_text }}
+-->
+
+{% if question.question_text in request.session.user_choices|get_item:request.session.session_key|get_item:"questions_choices" %}
+    Your vote has been recorded!
+    <a href="{% url 'polls:index' %}">Go back to the polls index</a>
+{% else %}
+    <a href="{% url 'polls:detail' question.id %}">Vote again</a>
+{% endif %}
